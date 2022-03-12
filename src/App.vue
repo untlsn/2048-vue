@@ -1,28 +1,33 @@
 <script setup lang="ts">
 import Cell from '~/components/Cell.vue';
-import { watchEffect } from 'vue';
+import { inject, watchEffect } from 'vue';
 import mouseCords from '~/store/mouseCords';
 import movablePositions from '~/store/movablePositions';
-
+inject('movablePositions', movablePositions);
 
 
 const plusMinus = (num1: any, num2: any) => num1 + 1 == num2 || num1 - 1 == num2;
 
 watchEffect(() => {
-  if (mouseCords.up.row && mouseCords.down.id != -1) {
+  const { up, down } = mouseCords;
+
+  if (up.row && down.id > -1) {
     if (
-      (mouseCords.down.row == mouseCords.up.row && plusMinus(mouseCords.down.column, mouseCords.up.column)) ||
-      (mouseCords.down.column == mouseCords.up.column && plusMinus(mouseCords.down.row, mouseCords.up.row))
+      (down.row == up.row && plusMinus(down.column, up.column)) ||
+      (down.column == up.column && plusMinus(down.row, up.row))
     ) {
-      const movable = movablePositions.value[mouseCords.down.id!];
-      console.log(mouseCords.up);
-      console.log(movable);
-      movable.row = mouseCords.up.row;
-      movable.column = mouseCords.up.column!;
+      const movable = movablePositions.value[down.id];
+      movable.row = up.row;
+      movable.column = up.column!;
+
+      if (up.id > -1) {
+        delete movablePositions.value[up.id];
+        movable.count *= 2;
+      }
     }
 
-    mouseCords.down = {};
-    mouseCords.up = {};
+    mouseCords.down = { id: -1 };
+    mouseCords.up = { id: -1 };
   }
 });
 </script>
@@ -47,7 +52,7 @@ watchEffect(() => {
         :row="movable.row"
         class="bg-amber-500"
       >
-        1
+        {{ movable.count }}
       </Cell>
     </div>
   </div>

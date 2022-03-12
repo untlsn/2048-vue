@@ -3,7 +3,7 @@ import { reactive } from 'vue';
 interface Cords {
   column?: number,
   row?: number
-  id?: number
+  id: number
 }
 
 const mouseCords = reactive({
