@@ -1,31 +1,28 @@
 <script lang="ts" setup="">
-import { reactive } from 'vue';
+import { computed } from 'vue';
 import mouseCords from '~/store/mouseCords';
-import noop from '~/helpers/noop';
 
 const props = withDefaults(defineProps<{
-  initRow: number,
-  initColumn: number
+  row: number,
+  column: number
   class?: string
-  movable?: boolean
+  id?: number
 }>(), {
   class: '',
+  id: -1,
 });
 
-const style = reactive({
-  '--column': props.initRow,
-  '--row': props.initColumn,
-});
+const style = computed(() => ({
+  '--column': props.column,
+  '--row': props.row,
+}));
 
 const mouse = (on: 'down' | 'up') => {
+
   mouseCords[on] = {
-    column: style['--column'],
-    row: style['--row'],
-    moveEv: on == 'down' && props.movable
-      ? () => {
-        style['--column'] = mouseCords.up.column!;
-        style['--row'] = mouseCords.up.row!;
-      } : noop,
+    column: props.column,
+    row: props.row,
+    id: props.id,
   };
 };
 

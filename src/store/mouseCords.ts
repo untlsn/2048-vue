@@ -3,15 +3,12 @@ import { reactive } from 'vue';
 interface Cords {
   column?: number,
   row?: number
-}
-
-interface CordsEv extends Cords {
-  moveEv?(cords: Cords): void
+  id?: number
 }
 
 const mouseCords = reactive({
-  down: {} as CordsEv,
-  up: {} as CordsEv,
+  down: {} as Cords,
+  up: {} as Cords,
 });
 
 export default mouseCords;
