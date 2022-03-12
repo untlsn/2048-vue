@@ -13,6 +13,7 @@ const movablePositions = reactive<{ value: Record<number, Movable> }>({
   value: {
     [++id]: { column: 1, row: 1, count: 1, id },
     [++id]: { column: 4, row: 2, count: 1, id },
+    [++id]: { column: 3, row: 3, count: 2, id },
   },
 });
 

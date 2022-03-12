@@ -16,14 +16,21 @@ watchEffect(() => {
       (down.row == up.row && plusMinus(down.column, up.column)) ||
       (down.column == up.column && plusMinus(down.row, up.row))
     ) {
-      const movable = movablePositions.value[down.id];
-      movable.row = up.row;
-      movable.column = up.column!;
+      const downMovable = movablePositions.value[down.id];
+
 
       if (up.id > -1) {
-        delete movablePositions.value[up.id];
-        movable.count *= 2;
+        const upMovable = movablePositions.value[up.id];
+        if (upMovable.count == downMovable.count) {
+          delete movablePositions.value[up.id];
+          downMovable.count *= 2;
+        } else {
+          return;
+        }
       }
+
+      downMovable.row = up.row;
+      downMovable.column = up.column!;
     }
 
     mouseCords.down = { id: -1 };
