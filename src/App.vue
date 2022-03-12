@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Cell from '~/components/Cell.vue';
-import { inject, watchEffect } from 'vue';
+import { inject, onBeforeMount, watchEffect } from 'vue';
 import mouseCords from '~/store/mouseCords';
 import movablePositions from '~/store/movablePositions';
 inject('movablePositions', movablePositions);
@@ -8,10 +8,17 @@ inject('movablePositions', movablePositions);
 
 const plusMinus = (num1: any, num2: any) => num1 + 1 == num2 || num1 - 1 == num2;
 
+onBeforeMount(() => {
+  movablePositions.addRand();
+});
+
 watchEffect(() => {
   const { up, down } = mouseCords;
 
-  if (up.row && down.id > -1) {
+  if (
+    up.row && down.id > -1 &&
+    !(up.row == down.row && up.column == down.column)
+  ) {
     if (
       (down.row == up.row && plusMinus(down.column, up.column)) ||
       (down.column == up.column && plusMinus(down.row, up.row))
@@ -35,6 +42,7 @@ watchEffect(() => {
 
     mouseCords.down = { id: -1 };
     mouseCords.up = { id: -1 };
+    movablePositions.addRand();
   }
 });
 </script>
