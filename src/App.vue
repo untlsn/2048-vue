@@ -1,50 +1,14 @@
 <script setup lang="ts">
 import Cell from '~/components/Cell.vue';
-import { inject, onBeforeMount, watchEffect } from 'vue';
-import mouseCords from '~/store/mouseCords';
+import mouseEvent from '~/hooks/mouseEvent';
+import { watchEffect } from 'vue';
 import movablePositions from '~/store/movablePositions';
-inject('movablePositions', movablePositions);
 
-
-const plusMinus = (num1: any, num2: any) => num1 + 1 == num2 || num1 - 1 == num2;
-
-onBeforeMount(() => {
-  movablePositions.addRand();
-});
-
+const dir = mouseEvent(document.body);
 watchEffect(() => {
-  const { up, down } = mouseCords;
-
-  if (
-    up.row && down.id > -1 &&
-    !(up.row == down.row && up.column == down.column)
-  ) {
-    if (
-      (down.row == up.row && plusMinus(down.column, up.column)) ||
-      (down.column == up.column && plusMinus(down.row, up.row))
-    ) {
-      const downMovable = movablePositions.value[down.id];
-
-
-      if (up.id > -1) {
-        const upMovable = movablePositions.value[up.id];
-        if (upMovable.count == downMovable.count) {
-          delete movablePositions.value[up.id];
-          downMovable.count *= 2;
-        } else {
-          return;
-        }
-      }
-
-      downMovable.row = up.row;
-      downMovable.column = up.column!;
-    }
-
-    mouseCords.down = { id: -1 };
-    mouseCords.up = { id: -1 };
-    movablePositions.addRand();
-  }
+  console.log(dir.value);
 });
+
 </script>
 
 <template>

@@ -34,8 +34,6 @@ const mouse = (on: 'down' | 'up') => {
     class="h-25 w-25 border-1 block-sit flex items-center justify-center text-3xl cursor-move select-none"
     :class="props.class"
     :style="style"
-    @mousedown="mouse('down')"
-    @mouseup="mouse('up')"
   >
     <slot />
   </div>
